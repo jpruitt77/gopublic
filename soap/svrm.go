@@ -116,9 +116,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		l("request", jsonDump(probeEnvelope))
 
-		// Check if the Multispeak header is present and valid from sender
-		if check(s.CheckHeader(probeEnvelope), "invalid MultiSpeak header", w, s) {
-			l("invalid Multispeak header: maybe wrong user and password")
+		// Check if the header is present and valid from sender
+		if check(s.CheckHeader(probeEnvelope), "invalid header", w, s) {
+			l("invalid header: maybe wrong user and password (or missing specific header)")
 			return
 		}
 
