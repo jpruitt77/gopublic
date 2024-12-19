@@ -28,17 +28,21 @@ type Server struct {
 	Marshaller            XMLMarshaller
 	ContentType           string
 	SoapVersion           string
+	Port                  string
+	Path                  string
 	CheckHeader           func(request EnvelopeRequest) error
 	CreateEnvelopeRequest func() EnvelopeRequest
 }
 
 // NewServer construct a new SOAP server
-func NewServer() *Server {
+func NewServer(port string, path string) *Server {
 	s := &Server{
 		handlers:    make(map[string]map[string]map[string]*operationHander),
 		Marshaller:  newDefaultMarshaller(),
 		ContentType: SoapContentType11,
 		SoapVersion: SoapVersion11,
+		Port:        port,
+		Path:        path,
 		CheckHeader: func(request EnvelopeRequest) error { return nil },
 		CreateEnvelopeRequest: func() EnvelopeRequest {
 			return EnvelopeRequest{
