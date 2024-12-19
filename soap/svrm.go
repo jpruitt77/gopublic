@@ -155,6 +155,6 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 // ListenAndServe run standalone
-func (s *Server) ListenAndServe(addr string) error {
-	return http.ListenAndServe(addr, s)
+func (s *Server) ListenAndServe() error {
+	return http.ListenAndServe(s.Port, s)
 }
