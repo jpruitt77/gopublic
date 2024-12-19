@@ -28,7 +28,7 @@ type Server struct {
 	Marshaller            XMLMarshaller
 	ContentType           string
 	SoapVersion           string
-	CheckHeader           func(request EnvelopeRequest) bool
+	CheckHeader           func(request EnvelopeRequest) error
 	CreateEnvelopeRequest func() EnvelopeRequest
 }
 
@@ -39,7 +39,7 @@ func NewServer() *Server {
 		Marshaller:  newDefaultMarshaller(),
 		ContentType: SoapContentType11,
 		SoapVersion: SoapVersion11,
-		CheckHeader: func(request EnvelopeRequest) bool { return true },
+		CheckHeader: func(request EnvelopeRequest) error { return nil },
 		CreateEnvelopeRequest: func() EnvelopeRequest {
 			return EnvelopeRequest{
 				Body: BodyRequest{
