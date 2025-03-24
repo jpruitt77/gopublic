@@ -103,11 +103,15 @@ func (c *Client) UseSoap12() {
 }
 
 // Call make a SOAP call
-func (c *Client) Call(soapAction string, request, response interface{}) (httpResponse *http.Response, err error) {
+func (c *Client) Call(soapAction string, header, request, response interface{}) (httpResponse *http.Response, err error) {
 
 	envelope := Envelope{}
 
 	envelope.Body.Content = request
+
+	if header != nil {
+		envelope.Header.Content = header
+	}
 
 	xmlBytes, err := c.Marshaller.Marshal(envelope, c.SoapVersion)
 	if err != nil {
