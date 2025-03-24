@@ -103,10 +103,12 @@ func (c *Client) UseSoap12() {
 }
 
 // Call make a SOAP call
-func (c *Client) Call(soapAction string, header, request, response interface{}) (httpResponse *http.Response, err error) {
+func (c *Client) Call(soapAction string, header, request, response any) (httpResponse *http.Response, err error) {
 
 	envelope := Envelope{}
-
+	envelope.XmlNSSoap = NamespaceSoap11
+	envelope.XmlNSXsd = XmlNSXsd // "http://www.w3.org/2001/XMLSchema"
+	envelope.XmlNSXsi = XmlNSXsi // "http://www.w3.org/2001/XMLSchema-instance"
 	envelope.Body.Content = request
 
 	if header != nil {
@@ -213,15 +215,15 @@ func (c *Client) Call(soapAction string, header, request, response interface{}) 
 	tmp = strings.Replace(tmp, NamespaceSoap12, NamespaceSoap11, -1)
 	rawbody = []byte(tmp)
 
-	respEnvelope := new(Envelope)
+	respEnvelope := new(EnvelopeRequest)
 	type Dummy struct {
 	}
 	// Response struct may be nil, e.g. if only a Status 200 is expected.
 	// In this case, we need a Dummy response to avoid a nil pointer if we receive a SOAP-Fault instead of the empty message (unmarshalling would fail)
 	if response == nil {
-		respEnvelope.Body = Body{Content: &Dummy{}}
+		respEnvelope.Body = BodyRequest{Content: &Dummy{}}
 	} else {
-		respEnvelope.Body = Body{Content: response}
+		respEnvelope.Body = BodyRequest{Content: response}
 	}
 
 	err = xml.Unmarshal(rawbody, respEnvelope)
